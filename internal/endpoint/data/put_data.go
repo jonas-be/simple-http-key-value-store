@@ -6,7 +6,7 @@ import (
 )
 
 func PutData(db database.Database, w http.ResponseWriter, key string, value string) bool {
-	if key == "" {
+	if value == "" {
 		http.Error(w, "no value set", http.StatusBadRequest)
 		return true
 	}
