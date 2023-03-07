@@ -1,8 +1,6 @@
 package endpoint
 
 import (
-	"fmt"
-	"html"
 	"net/http"
 	"simple-http-server/internal/database"
 	"simple-http-server/internal/endpoint/data"
@@ -18,7 +16,7 @@ func (dataHandler DataHandler) HandelRequest(w http.ResponseWriter, r *http.Requ
 	value := r.URL.Query().Get("value")
 
 	if key == "" {
-		http.Error(w, fmt.Sprintf("No entry for key %q", html.EscapeString(key)), http.StatusBadRequest)
+		http.Error(w, "no key set", http.StatusBadRequest)
 		return
 	}
 
