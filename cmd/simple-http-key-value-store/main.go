@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	"simple-http-server/internal/database"
-	"simple-http-server/internal/endpoint"
+	"simple-http-key-value-store/internal/database"
+	"simple-http-key-value-store/internal/endpoint"
 )
 
 var db = endpoint.DataHandler{Db: database.Database{}}
