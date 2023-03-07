@@ -8,7 +8,7 @@ import (
 )
 
 func TestPutOk(t *testing.T) {
-	req := httptest.NewRequest(http.MethodPut, "http://localhost:8080/data?key=b?value=ZZZ", nil)
+	req := httptest.NewRequest(http.MethodPut, "http://localhost:8080/data?key=b&value=ZZZ", nil)
 	w := httptest.NewRecorder()
 
 	dataHandler := endpoint.DataHandler{Db: mockDb}
@@ -23,7 +23,7 @@ func TestPutOk(t *testing.T) {
 }
 
 func TestPutCreated(t *testing.T) {
-	req := httptest.NewRequest(http.MethodPut, "http://localhost:8080/data?key=x?value=X", nil)
+	req := httptest.NewRequest(http.MethodPut, "http://localhost:8080/data?key=x&value=X", nil)
 	w := httptest.NewRecorder()
 
 	dataHandler := endpoint.DataHandler{Db: mockDb}
