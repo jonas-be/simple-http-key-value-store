@@ -1,4 +1,4 @@
-package test
+package util
 
 import (
 	"io"
@@ -7,25 +7,25 @@ import (
 	"testing"
 )
 
-var mockDb = database.Database{
+var MockDb = database.Database{
 	"a": "AAA",
 	"b": "bb",
 	"c": "c",
 }
 
-func assertDBEntry(t *testing.T, db database.Database, key string, expectedValue string) {
+func AssertDBEntry(t *testing.T, db database.Database, key string, expectedValue string) {
 	if db.Get(key) != expectedValue {
 		t.Errorf("expected \"%v\", got \"%s\"", expectedValue, db.Get(key))
 	}
 }
 
-func assertStatusCode(t *testing.T, resp *http.Response, expectedCode int) {
+func AssertStatusCode(t *testing.T, resp *http.Response, expectedCode int) {
 	if resp.StatusCode != expectedCode {
 		t.Errorf("expected status %v, got %v", expectedCode, resp.Status)
 	}
 }
 
-func assertBody(t *testing.T, resp *http.Response, expectedBody string) {
+func AssertBody(t *testing.T, resp *http.Response, expectedBody string) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatal(err)
