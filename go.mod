@@ -1,3 +1,3 @@
-module paas-rampup-challenges
+module simple-http-server
 
 go 1.18
