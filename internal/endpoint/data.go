@@ -2,8 +2,8 @@ package endpoint
 
 import (
 	"net/http"
-	"simple-http-server/internal/database"
-	"simple-http-server/internal/endpoint/data"
+	"simple-http-key-value-store/internal/database"
+	"simple-http-key-value-store/internal/endpoint/data"
 )
 
 type DataHandler struct {

@@ -3,8 +3,8 @@ package test
 import (
 	"net/http"
 	"net/http/httptest"
-	"simple-http-server/internal/endpoint"
-	"simple-http-server/test/util"
+	"simple-http-key-value-store/internal/endpoint"
+	"simple-http-key-value-store/test/util"
 	"testing"
 )
 

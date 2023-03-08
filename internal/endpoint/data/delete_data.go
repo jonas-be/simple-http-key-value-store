@@ -3,7 +3,7 @@ package data
 import (
 	"fmt"
 	"net/http"
-	"simple-http-server/internal/database"
+	"simple-http-key-value-store/internal/database"
 )
 
 func DeleteData(db database.Database, w http.ResponseWriter, key string) bool {

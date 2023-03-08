@@ -3,7 +3,7 @@ package util
 import (
 	"io"
 	"net/http"
-	"simple-http-server/internal/database"
+	"simple-http-key-value-store/internal/database"
 	"testing"
 )
 

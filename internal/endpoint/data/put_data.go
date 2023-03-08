@@ -2,7 +2,7 @@ package data
 
 import (
 	"net/http"
-	"simple-http-server/internal/database"
+	"simple-http-key-value-store/internal/database"
 )
 
 func PutData(db database.Database, w http.ResponseWriter, key string, value string) bool {
