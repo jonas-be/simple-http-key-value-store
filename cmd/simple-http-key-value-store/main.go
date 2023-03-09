@@ -9,6 +9,6 @@ import (
 var db = endpoint.DataHandler{Db: database.Database{}}
 
 func main() {
-	http.HandleFunc("/data", db.HandelRequest)
+	http.HandleFunc("/data", db.HandleRequest)
 	http.ListenAndServe(":8080", nil)
 }

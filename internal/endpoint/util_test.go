@@ -1,4 +1,4 @@
-package util
+package endpoint
 
 import (
 	"io"
@@ -13,7 +13,7 @@ var MockDb = database.Database{
 	"c": "c",
 }
 
-func AssertDBEntry(t *testing.T, db database.Database, key string, expectedValue string) {
+func AssertDBEntry(t *testing.T, db Database, key string, expectedValue string) {
 	if db.Get(key) != expectedValue {
 		t.Errorf("expected \"%v\", got \"%s\"", expectedValue, db.Get(key))
 	}
