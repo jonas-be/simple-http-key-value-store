@@ -6,7 +6,7 @@ import (
 	"simple-http-key-value-store/internal/endpoint"
 )
 
-var db = endpoint.DataHandler{Db: database.Database{}}
+var db = endpoint.DataHandler{Db: &database.Database{}}
 
 func main() {
 	http.HandleFunc("/data", db.HandleRequest)

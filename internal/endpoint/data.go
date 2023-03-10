@@ -1,13 +1,16 @@
 package endpoint
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"simple-http-key-value-store/internal/database"
 )
 
+//go:generate mockery --name Database
 type Database interface {
 	Get(key string) string
-	Set(key string, value string)
+	Set(key string, value string) error
 	Delete(key string)
 	Contains(key string) bool
 }
@@ -26,51 +29,57 @@ func (dh DataHandler) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var statusCode int
+	var body string
 	switch method {
 	case "GET":
-		getData(dh.Db, w, key)
+		statusCode, body = getData(dh.Db, key)
 		break
 	case "PUT":
-		putData(dh.Db, w, key, value)
+		statusCode, body = putData(dh.Db, key, value)
 		break
 	case "DELETE":
-		deleteData(dh.Db, w, key)
+		statusCode, body = deleteData(dh.Db, key)
 		break
 	default:
-		http.Error(w, "unsupported method", http.StatusMethodNotAllowed)
+		statusCode, body = http.StatusMethodNotAllowed, "unsupported method"
 	}
+	w.WriteHeader(statusCode)
+	fmt.Fprintf(w, "%s\n", body)
 }
 
-func getData(db Database, w http.ResponseWriter, key string) bool {
+func getData(db Database, key string) (int, string) {
 	if !db.Contains(key) {
-		http.Error(w, fmt.Sprintf("no value for key %v", key), http.StatusBadRequest)
-		return true
+		return http.StatusBadRequest, fmt.Sprintf("no value for key %v", key)
 	}
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, db.Get(key))
-	return false
+	return http.StatusOK, db.Get(key)
 }
 
-func putData(db Database, w http.ResponseWriter, key string, value string) bool {
+func putData(db Database, key string, value string) (int, string) {
 	if value == "" {
-		http.Error(w, "no value set", http.StatusBadRequest)
-		return true
+		return http.StatusBadRequest, "no value set"
 	}
-	if db.Contains(key) {
-		w.WriteHeader(http.StatusOK)
-	} else {
-		w.WriteHeader(http.StatusCreated)
+	isNewEntry := !db.Contains(key)
+	err := db.Set(key, value)
+	if err != nil {
+		if errors.As(err, &database.OutOfStorageError{}) {
+			return http.StatusInsufficientStorage, err.Error()
+		} else if errors.As(err, &database.InputError{}) {
+			return http.StatusRequestEntityTooLarge, err.Error()
+		} else {
+			return http.StatusInternalServerError, err.Error()
+		}
 	}
-	db.Set(key, value)
-	return false
+	if isNewEntry {
+		return http.StatusCreated, ""
+	}
+	return http.StatusOK, ""
 }
 
-func deleteData(db Database, w http.ResponseWriter, key string) bool {
+func deleteData(db Database, key string) (int, string) {
 	if !db.Contains(key) {
-		http.Error(w, fmt.Sprintf("key %v not exists", key), http.StatusBadRequest)
-		return true
+		return http.StatusBadRequest, fmt.Sprintf("key %v not exists", key)
 	}
 	db.Delete(key)
-	w.WriteHeader(http.StatusOK)
-	return false
+	return http.StatusNoContent, ""
 }

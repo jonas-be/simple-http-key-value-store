@@ -3,15 +3,18 @@ package endpoint
 import (
 	"io"
 	"net/http"
-	"simple-http-key-value-store/internal/database"
 	"testing"
 )
 
-var MockDb = database.Database{
-	"a": "AAA",
-	"b": "bb",
-	"c": "c",
-}
+//var MockDb = &database.Database{
+//	Data: map[string]string{
+//		"a": "AAA",
+//		"b": "bb",
+//		"c": "c",
+//	},
+//}
+
+var MockDb = MockDatabase{}
 
 func AssertDBEntry(t *testing.T, db Database, key string, expectedValue string) {
 	if db.Get(key) != expectedValue {
