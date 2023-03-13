@@ -39,18 +39,18 @@ func (db *Database) Set(key string, value string) error {
 		return InputError{"value length exceeded"}
 	}
 	db.mu.Lock()
+	defer db.mu.Unlock()
 	if len(db.Data) >= 50 {
 		return OutOfStorageError{"database has already 50 entries"}
 	}
 	db.Data[key] = value
-	db.mu.Unlock()
 	return nil
 }
 
 func (db *Database) Delete(key string) {
 	db.mu.Lock()
+	defer db.mu.Unlock()
 	delete(db.Data, key)
-	db.mu.Unlock()
 }
 
 func (db *Database) Contains(key string) bool {
