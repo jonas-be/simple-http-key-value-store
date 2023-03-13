@@ -154,14 +154,14 @@ func TestDeleteBadRequest(t *testing.T) {
 }
 
 func TestRaceCondition(t *testing.T) {
-	var wg sync.WaitGroup // New wait group
-	wg.Add(2)             // Using two goroutines
-
 	db := NewMockDatabase(t)
 	db.EXPECT().Contains("x").Return(true).Once()
 	db.EXPECT().Set("x", "AAA").Return(nil).Once()
 
 	dataHandler := DataHandler{Db: db}
+
+	var wg sync.WaitGroup
+	wg.Add(2)
 
 	go call(dataHandler, http.MethodGet, "http://localhost:8080/data?key=x", &wg)
 	go call(dataHandler, http.MethodPut, "http://localhost:8080/data?key=x&value=AAA", &wg)
@@ -170,11 +170,12 @@ func TestRaceCondition(t *testing.T) {
 }
 
 func call(dataHandler DataHandler, method string, url string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	req := httptest.NewRequest(method, url, nil)
 	w := httptest.NewRecorder()
 
 	dataHandler.HandleRequest(w, req)
 
 	fmt.Printf("%v: %v", url, w.Result().StatusCode)
-	wg.Done()
 }

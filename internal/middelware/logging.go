@@ -1,7 +1,7 @@
 package middelware
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -37,7 +37,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		start := time.Now()
 		wrapped := wrapResponseWriter(w)
 		next.ServeHTTP(wrapped, r)
-		fmt.Printf(
+		log.Printf(
 			"%s %s %d %vms\n",
 			r.Method,
 			r.RequestURI,
